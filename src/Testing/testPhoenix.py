@@ -60,6 +60,12 @@ class TestPhoenix(unittest.TestCase):
         """Color palette contains the expected number of colors"""  	  	  
         self.assertEqual(108, len(grad))  	  	  
 
+    # added this unit test that ChatGPT gave me:
+    def test_getColorFromPaletteOutOfBounds(self):
+        """getColorFromPalette returns the default color for out-of-bounds input"""
+        self.assertEqual(getColorFromPalette(complex(100, 100)), '#000000')
+        self.assertEqual(getColorFromPalette(complex(-100, -100)), '#000000')
+
 
 if __name__ == '__main__':  	  	  
     unittest.main()  	  	  

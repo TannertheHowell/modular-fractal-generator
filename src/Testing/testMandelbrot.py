@@ -60,7 +60,13 @@ class TestMandelbrot(unittest.TestCase):
 
     def test_palleteLength(self):  	  	  
         """Palette contains the expected number of colors"""  	  	  
-        self.assertEqual(111, len(palette))  	  	  
+        self.assertEqual(111, len(palette))
+
+    # added this unit test that ChatGPT gave me:
+    def test_pixelColorOrIndexOutOfBounds(self):
+        """PixelColorOrIndex returns the default index for out-of-bounds input"""
+        self.assertEqual(PixelColorOrIndex(complex(100, 100), palette), None)
+        self.assertEqual(PixelColorOrIndex(complex(-100, -100), palette), None)
 
 
 if __name__ == '__main__':  	  	  
