@@ -12,13 +12,13 @@ import turtle
 import os
 import os.path
 import sys
-import time
+from time import time
 import math
 
 # this import caused problems on my Windows computer...
 # import numpy
 
-
+s = 512
 Save_As_Picture = True
 tkPhotoImage = None
 

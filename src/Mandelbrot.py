@@ -95,7 +95,7 @@ def mbrot_main(image):
     print(f"Wrote picture {image}.png", file=sys.stderr)
 
     # Call tkinter.mainloop so the GUI remains open
-    print("Close the image window to exit the program", file=sys.stderr)
+    print("Close the image getColorFromPalettedow to exit the program", file=sys.stderr)
     mainloop()
 
 

@@ -26,7 +26,7 @@
 import sys  	  	  
 
 import mbrot_fractal  	  	  
-import phoenix_fractal as phoenix  	  	  
+import Phoenix as phoenix
 import mbrot_fractal  	  	  
 
 
@@ -38,7 +38,7 @@ MBROTS = [ # TODO import these from the mandelbrot module
         'seahorse'  	  	  
         ]  	  	  
 #
-from phoenix_fractal import f as phoenix_fractals
+from Phoenix import f as phoenix_fractals
 PHOENX =[]  	  	  
 for p in  phoenix_fractals . keys():  	  	  
     PHOENX=PHOENX+[p]  	  	  
@@ -120,40 +120,6 @@ else:
     fratcal = sys.argv[1]  	  	  
 #else:  	  	  
     # the fractal name is the 1st argument after the program name  	  	  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if PHOENX.count(sys.argv[1])>0: phoenix.phoenix_main(sys.argv[1])  	  	  

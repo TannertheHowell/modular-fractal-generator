@@ -1,7 +1,7 @@
 import sys
 import time
 from tkinter import Tk, Canvas, PhotoImage, mainloop
-from ImagePainter import paint
+
 from math import sqrt, cos, cosh, sin, sinh, remainder, acos, acosh, asin, asinh
 
 # These are the imports that I usually import
@@ -238,9 +238,9 @@ import http, html
 from tkinter import Tk, Canvas, PhotoImage, mainloop
 from time import time
 
-s = 512
 
-def getColorFromPalette(z):
+
+def getColorFromPalette(z, grad, win):
     """  	  	  
     Return the index of the color of the current pixel  	  	  
     within the Phoenix fractal in the palette array  	  	  
@@ -248,8 +248,8 @@ def getColorFromPalette(z):
 
     # I feel bad about all of the global variables I'm using.
     # There must be a better way...
-    global grad
-    global win
+    # global grad
+    # global win
 
     # c is the Julia Constant; varying this value gives rise to a variety of variated images
     c = complex(0.5667, 0.0)
@@ -294,7 +294,8 @@ def getColorFromPalette(z):
 def makePictureOfFractal(f, i, e, w, g, p, W, a, b, s):
     """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
     Assumes the image is 640x640 pixels."""
-
+    win = w
+    grad = g
     # Correlate the boundaries of the PhotoImage object to the complex
     # coordinates of the imaginary plane
 
@@ -358,14 +359,14 @@ def makePictureOfFractal(f, i, e, w, g, p, W, a, b, s):
             X = min[0] + c * size
             Y = 0
             # get the color of the pixel at this point in the complex plain
-            cp = getColorFromPalette(complex(X, Y))
+            cp = getColorFromPalette(complex(X, Y), grad, win)
             # calculate the X value in the complex plane (but I know this is
             # really the IMAGINARY axis that we're talking about here...)
             Y = min[1] + r * size
             # TODO: do I really need to call getColorFromPalette() twice?
             #       It seems like this should be slow...
             #       But, if it aint broken, don't repair it, right?
-            cp = getColorFromPalette(complex(X, Y))
+            cp = getColorFromPalette(complex(X, Y), grad, win)
             cs.append(cp)
         pixls = '{' + ' '.join(cs) + '}'
         p.put(pixls, (0, s - r))
