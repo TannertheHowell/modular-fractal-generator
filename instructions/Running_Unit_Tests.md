@@ -118,7 +118,7 @@ Use the examples given in the starter code as a guide to creating new test cases
 
 Before you make your final submission, edit `src/runTests.py` and remove the references to this test file.  Just look for and delete the two `TODO` lines:
 
-``python
+```python
 from Testing import testAssertions  # TODO: delete from the final submission
 
 ...
