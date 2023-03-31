@@ -21,7 +21,7 @@ import math
 # For convenience I have placed these into a dictionary so you may easily
 # switch between them by entering the name of the image you want to generate
 # into the variable 'image'.
-images = {
+patternDict = {
     'mandelbrot': {
         'centerX': -0.6,
         'centerY': 0.0,
@@ -52,11 +52,11 @@ images = {
         'axisLen': 0.008,
     },
 
-    'spiral1': {
-        'centerX': -0.747,
-        'centerY': 0.1075,
-        'axisLen': 0.002,
-    },
+    # 'spiral1': {
+    #     'centerX': -0.747,
+    #     'centerY': 0.1075,
+    #     'axisLen': 0.002,
+    # },
 
     'elephants': {
         'centerX': 0.3015,
@@ -86,7 +86,7 @@ def mbrot_main(image):
     global window
     window = Tk()
     img = PhotoImage(width=512, height=512)
-    paint(images, image, window, img)
+    paint(patternDict, image, window, img)
 
     # Save the image as a PNG
     after = time.time()

@@ -43,7 +43,7 @@ def phoenix_main(i):
     tkPhotoImage = PhotoImage(width=s, height=s)
     # ... and use it to make a picture of a fractal
     # TODO - should I have named this function "makeFractal()" or maybe just "makePicture"?
-    makePictureOfFractal(f[i], i, ".png", win, grad, tkPhotoImage, GREY0, None, None, s)
+    makePictureOfFractal(patternDict[i], i, ".png", win, grad, tkPhotoImage, GREY0, None, None, s)
 
     if Save_As_Picture:
         # Write out the Fractal into a .gif image file
@@ -96,7 +96,7 @@ def phoenix_main(i):
 # this configuration dictionary instead of hardcoding it into this program.
 # But I don't have time for this right now, too busy.  I'll just keep doing it
 # the way I know how.
-f = {
+patternDict = {
         # The full Phoneix set
         'phoenix': {
             'centerX':     0.0,
