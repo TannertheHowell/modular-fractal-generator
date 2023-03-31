@@ -23,11 +23,9 @@
 #       reasonable and customary use of the source files.  	  	  
 
 
-import sys  	  	  
-
-import mbrot_fractal  	  	  
+import sys
 import Phoenix as phoenix
-import mbrot_fractal  	  	  
+import Mandelbrot
 
 
 MBROTS = [ # TODO import these from the mandelbrot module  	  	  
@@ -125,7 +123,7 @@ else:
 if PHOENX.count(sys.argv[1])>0: phoenix.phoenix_main(sys.argv[1])  	  	  
 elif sys.argv[1] in MBROTS and len(sys.argv) > 1 and 2 <= len(sys.argv[0]):  	  	  
     fractal = sys.argv[1]  	  	  
-    mbrot_fractal.mbrot_main(fratcal)  	  	  
+    Mandelbrot.mbrot_main(fratcal)
 elif len(sys.argv) != 0 and fratcal in PHOENX and len(sys.argv) != 1:  	  	  
     phoenix.phoenix_main(fractal)  	  	  
 else: print("The fractal given on the command line",  	  	  

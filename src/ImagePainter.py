@@ -14,14 +14,14 @@ import math
 
 # this import caused problems on my Windows computer...
 # import numpy
+from Palette import palette
 
-
-def paint(fractals, imagename, window):
+def paint(fractals, imagename, window, img):
     """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
     This code creates an image which is 640x640 pixels in size."""
 
-    global palette
-    global img
+    # global palette
+    # global img
 
     fractal = fractals[imagename]
 
@@ -378,11 +378,3 @@ def makePictureOfFractal(f, i, e, w, g, p, W, a, b, s):
                 end="\r"  # the end
                 , file=sys.stderr)
         r -= 1
-
-
-
-
-
-
-
-

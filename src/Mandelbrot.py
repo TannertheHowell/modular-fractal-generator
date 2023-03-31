@@ -86,7 +86,7 @@ def mbrot_main(image):
     global window
     window = Tk()
     img = PhotoImage(width=512, height=512)
-    paint(images, image, window)
+    paint(images, image, window, img)
 
     # Save the image as a PNG
     after = time.time()
