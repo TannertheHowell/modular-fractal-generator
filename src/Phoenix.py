@@ -1,57 +1,37 @@
-import sys
-import time
-from tkinter import Tk, PhotoImage, mainloop
-# from ImagePainter import makePictureOfFractal
-from Palette import grad
-from time import time
-from ImagePainter import paint
+def getColorFromPalette(z, grad):
+    """
+    Return the index of the color of the current pixel
+    within the Phoenix fractal in the palette array
+    z is the complex number passed in
+    """
 
-patternDict = {
-        # The full Phoenix set
-        'phoenix': {
-            'centerX':     0.0,
-            'centerY':     0.0,
-            'axisLength':  3.25,
-            },
+    # c is the Julia Constant; varying this value gives rise to a variety of variate images
+    c = complex(0.5667, 0.0)
 
-        # This one looks like a peacock's tail to me
-        'peacock': {
-            'centerX':     -0.363287878200906,
-            'centerY':     0.381197981824009,
-            'axisLength':  0.0840187115019564,
-        },
+    # phoenix is the Phoenix Constant; same deal as above - adjust this to get different results
+    phoenix = complex(-0.5, 0.0)
 
-        # Two or more monkeys having a scuffle
-        'monkey-knife-fight': {
-            'centerX':    -0.945542168674699,
-            'centerY':    0.232234726688103,
-            'axisLength': 0.136626506024096,
-            },
-
-        # This one makes me hungry to look at
-        'shrimp-cocktail': {
-            'centerX': 0.529156626506024,
-            'centerY': -0.3516077170418,
-            'axisLength': 0.221204819277108,
-            },
-        }
+    # The first thing we do to the complex number Z is reflect its components,
+    # so the imaginary part becomes the real part, and vice versa
+    zFlipped = complex(z.imag, z.real)
 
 
-def phoenix_main(fractalName):
-    """The main entry-point for the Phoenix fractal generator"""
+    # zPrevious is the PREVIOUS Z value, except the 1st time through the
+    # function, when it starts out as Complex Zero (which is actually the
+    # same thing as REAL Zero 0)  MATH IS BEAUTIFUL!
+    zPrev = 0+0j
+    # set Z back to zFlipped, it is literally super-important that we do this
+    # before the next part of the algorithm
+    z = zFlipped
 
-    size = 512
-    startTime = time()
-    window = Tk()
+    for i in range(102):
+        zSave = z  # save the current Z value before we overwrite it
+        # compute the new Z value from the current and previous Zs
+        z = z * z + c + (phoenix * zPrev)
+        zPrev = zSave  # Set the prevZ value for the next iteration
 
-    print("Rendering %s fractal" % fractalName, file=sys.stderr)
+        # if the absolute value of Z is greater or equal than 2, then return that color
+        if abs(z) > 2:
+            return grad[i]  # The sequence is unbounded
 
-    tkPhotoImage = PhotoImage(width=size, height=size)
-    paint(fractalName, window, tkPhotoImage, size, grad)
-
-    print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
-    tkPhotoImage.write(f"{fractalName}.png")
-    print("Wrote picture " + fractalName + ".png", file=sys.stderr)
-
-    print("Close the image window to exit the program", file=sys.stderr)
-    mainloop()
+    return grad[101]         # Else this is a bounded sequence

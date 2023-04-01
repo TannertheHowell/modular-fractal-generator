@@ -1,83 +1,37 @@
-import sys
-import time
-from tkinter import Tk, Canvas, PhotoImage, mainloop
-from ImagePainter import paint
-from time import time
-from Palette import grad
+def PixelColorOrIndex(c, palette):
+    """
+    Return the color of the current pixel within the Mandelbrot set
+    - OR -
+    Return the INDEX of the color of the pixel within the Mandelbrot set
+    The INDEX corresponds to the iteration count of the for loop.
+    """
+    z = complex(0, 0)  # z0
+    MAX_ITERATIONS = 115
 
+    if palette is not None:
+        length = len(palette)
+        for i in range(length):
+            z = z * z + c  # Get z1, z2, ...
+            if abs(z) > 2:
+                if i >= len(palette):
+                    i = len(palette) - 1
+                return palette[i]
 
-# For convenience, I have placed these into a dictionary, so you may easily
-# switch between them by entering the name of the image you want to generate
-# into the variable 'patternDict'.
-patternDict = {
-    'mandelbrot': {
-        'centerX': -0.6,
-        'centerY': 0.0,
-        'axisLength': 2.5,
-    },
+    # If a color scheme palette is NOT passed in, return the number of the color
+    # Used for leaf pattern
+    elif palette is None:
+        length = MAX_ITERATIONS
+        for i in range(length):
+            z = z * z + c  # Get z1, z2, ...
+            if abs(z) > 2:
+                if i == MAX_ITERATIONS:
+                    i = MAX_ITERATIONS - 1
+                return i
+            elif abs(z) <= 2:
+                continue
 
-    'mandelbrot-zoomed': {
-        'centerX': -1.0,
-        'centerY': 0.0,
-        'axisLength': 1.0,
-    },
-
-    'spiral0': {
-        'centerX': -0.761335372924805,
-        'centerY': 0.0835704803466797,
-        'axisLength': 0.004978179931102462,
-    },
-
-    'spiral1': {
-        'centerX': -0.747,
-        'centerY': 0.1075,
-        'axisLength': 0.002,
-    },
-
-    'seahorse': {
-        'centerX': -0.748,
-        'centerY': -0.102,
-        'axisLength': 0.008,
-    },
-
-    'elephants': {
-        'centerX': 0.3015,
-        'centerY': -0.0200,
-        'axisLength': 0.03,
-    },
-
-    'leaf': {
-        'centerX': -1.543577002,
-        'centerY': -0.000058690069,
-        'axisLength': 0.000051248888,
-    },
-
-    'starfish': {
-        'centerX': -0.463595023481762,
-        'centerY': 0.598380871135558,
-        'axisLength': 0.00128413675654471,
-    },
-}
-
-
-def mbrot_main(fractalName):
-    """The main entry-point for the Mandelbrot fractal generator"""
-    size = 512
-    startTime = time()
-    window = Tk()
-
-    print("Rendering %s fractal" % fractalName, file=sys.stderr)
-
-    tkPhotoImage = PhotoImage(width=size, height=size)
-    # TODO: REFORMAT
-    paint(fractalName, window, tkPhotoImage, size, grad)
-
-    print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
-    tkPhotoImage.write(f"{fractalName}.png")
-    print("Wrote picture " + fractalName + ".png", file=sys.stderr)
-
-    print("Close the image window to exit the program", file=sys.stderr)
-    mainloop()
-
-
-
+    if palette is None:
+        return i
+    elif i >= len(palette):
+        i = len(palette) - 1
+    return palette[i]  # The sequence is unbounded
