@@ -16,88 +16,81 @@ import math
 # import numpy
 from Palette import palette
 
-def paint(fractals, imagename, window, img):
+# def imagePainterMain(fractalName):
+#     """The main entry-point for the Mandelbrot fractal generator"""
+#     size = 512
+#     startTime = time()
+#     window = Tk()
+#
+#     print("Rendering %s fractal" % fractalName, file=sys.stderr)
+#
+#     tkPhotoImage = PhotoImage(width=size, height=size)
+#     # TODO: REFORMAT
+#     paint(patternDict, fractalName, window, tkPhotoImage)
+#
+#     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
+#     tkPhotoImage.write(f"{fractalName}.png")
+#     print("Wrote picture " + fractalName + ".png", file=sys.stderr)
+#
+#     print("Close the image window to exit the program", file=sys.stderr)
+#     mainloop()
+
+
+def paint(patternDict, fractalName, window, tkPhotoImage, size):
     """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
     This code creates an image which is 640x640 pixels in size."""
 
-    # global palette
-    # global img
+    fractal = patternDict[fractalName]
 
-    fractal = fractals[imagename]
-
-    # Figure out how the boundaries of the PhotoImage relate to coordinates on
-    # the imaginary plane.
-    minx = fractal['centerX'] - (fractal['axisLen'] / 2.0)
-    maxx = fractal['centerX'] + (fractal['axisLen'] / 2.0)
-    miny = fractal['centerY'] - (fractal['axisLen'] / 2.0)
-    maxy = fractal['centerY'] + (fractal['axisLen'] / 2.0)
+    minx = fractal['centerX'] - (fractal['axisLength'] / 2.0)
+    maxx = fractal['centerX'] + (fractal['axisLength'] / 2.0)
+    miny = fractal['centerY'] - (fractal['axisLength'] / 2.0)
+    maxy = fractal['centerY'] + (fractal['axisLength'] / 2.0)
 
     # Display the image on the screen
-    canvas = Canvas(window, width=512, height=512, bg='#000000')
-    canvas.pack()
-    canvas.create_image((256, 256), image=img, state="normal")
+    tk_canvas = Canvas(window, width=size, height=size, bg='#000000')
+    tk_canvas.pack()
+    tk_canvas.create_image((size / 2, size / 2), image=tkPhotoImage, state="normal")
 
-    # At this scale, how much length and height on the imaginary plane does one
-    # pixel take?
-    pixelsize = abs(maxx - minx) / 512
+    pixelSize = abs(maxx - minx) / size
 
-    portion = 0
-    total_pixels = 512 * 512  # 262144
-    # loop
-    for row in range(512, 0, -1):
-        cc = []
-        for col in range(512):
-            x = minx + col * pixelsize
-            y = miny + row * pixelsize
+    for row in range(size, 0, -1):
+        paletteList = []
+        for col in range(size):
+            x = minx + col * pixelSize
+            y = miny + row * pixelSize
             # "Leaf" is the only well-behaved fractal - all of the others crash
             #
-            if imagename in [ 'leaf', ]:
+            if fractalName in ['leaf', ]:
                 idx = PixelColorOrIndex(complex(x, y), None)
                 color = palette[idx]
             # The rest of the fractals
             else:
                 color = PixelColorOrIndex(complex(x, y), palette)
-            cc.append(color)
-            y = miny + row * pixelsize # prepare for next loop
-            x = minx + col * pixelsize # prepare for next loop
+            paletteList.append(color)
 
-        img.put('{' + ' '.join(cc) + '}', to=(0, 512-row))
-        portion = 512 - row / 512
+        pixels = '{' + ' '.join(paletteList) + '}'
+        tkPhotoImage.put(pixels, (0, size - row))
+        # portion = size - row / size
         window.update()  # display a row of pixels
 
-        portion = 512 - row / 512 # prepare for next loop
-        # pixelsWrittenSoFar(portion, )  # This way isn't working let me try somthing eles...
-        #total_pixles = pixelsWrittenSoFar(row, col)  # will equal 262144 when the program is finished
-        print(pixelsWrittenSoFar(row, col), end='\r', file=sys.stderr)  # the '\r' returns the cursor to the leftmost column
+        print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)  # the '\r' returns the cursor to the leftmost column
 
 
-def pixelsWrittenSoFar(rows, cols):
-    portion = (512 - rows) / 512
-    pixels = (512 - rows) * 512
+def pixelsWrittenSoFar(rows, size):
+    portion = (size - rows) / size
     status_percent = '{:>4.0%}'.format(portion)
     status_bar_width = 34
     status_bar = '=' * int(status_bar_width * portion)
     status_bar = '{:<33}'.format(status_bar)
-    # print(f"{pixels} pixels have been output so far")
-    # return pixels
-    # return '[' + status_percent + ' ' + status_bar + ']'
     return ''.join(list(['[', status_percent, ' ', status_bar, ']']))
 
-
-# def pixelsWrittenSoFar(rows, cols):
-#     pixels = 0
-#     for r in range(rows + 1):
-#         pixels = pixels + cols
-#     print(pixels, "pixels have been output so far", file=sys.stderr)
-#     return pixels
 
 MAX_ITERATIONS = 115
 z = 0
 seven = 7.0
 TWO = 2
-
 img = None
-
 mainWindowObject = None
 
 # def PixelColorOrIndex(c, palette):
@@ -290,91 +283,34 @@ def getColorFromPalette(z, grad, win):
 
 
 
-
-def makePictureOfFractal(f, i, e, w, g, p, W, a, b, s):
+def makePictureOfFractal(fractal, window, grad, tkPhotoImage, backgroundColor, size):
     """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
     Assumes the image is 640x640 pixels."""
-    win = w
-    grad = g
-    # Correlate the boundaries of the PhotoImage object to the complex
-    # coordinates of the imaginary plane
 
-    # Compute the minimum coordinate of the picture
-    min = ((f['centerX'] - (f['axisLength'] / 2.0)),
-           (f['centerY'] - (f['axisLength'] / 2.0)))
-
-    #global s  # huh, this worked last week...
-
-    # Compute the maximum coordinate of the picture
-    # The program has only one axisLength because the images are square
-    # Squares are basically rectangles except the sides are equal instead of different
-    max = ((f['centerX'] + (f['axisLength'] / 2.0)),
-           (f['centerY'] + (f['axisLength'] / 2.0)))
+    minx = fractal['centerX'] - (fractal['axisLength'] / 2.0)
+    maxx = fractal['centerX'] + (fractal['axisLength'] / 2.0)
+    miny = fractal['centerY'] - (fractal['axisLength'] / 2.0)
+    maxy = fractal['centerY'] + (fractal['axisLength'] / 2.0)
 
     # Display the image on the screen
-    tk_Interface_PhotoImage_canvas_pixel_object = Canvas(win, width=s, height=s, bg=W)
+    tk_canvas = Canvas(window, width=size, height=size, bg=backgroundColor)
+    tk_canvas.pack()
 
-    # pack the canvas object into its parent widget
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()
-    # TODO: Sometimes I wonder whether some of my functions are trying to do
-    #       too many different things... this is the correct part of the
-    #       program to create a GUI window, right?
+    tk_canvas.create_image((size / 2, size / 2), image=tkPhotoImage, state="normal")
 
-    # Create the TK PhotoImage object that backs the Canvas Objcet
-    # This is what lets us draw individual pixels instead of drawing things like rectangles, squares, and quadrilaterals
-    tk_Interface_PhotoImage_canvas_pixel_object.create_image((s/2, s/2), image=p, state="normal")
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()  # This seems repetitive
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()  # But it is how Larry wrote it the tutorial
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()  # Larry's a smart guy.  I'm sure he has his reasons.
+    pixelSize = abs(maxx - minx) / size
 
-    # Total number of pixels in the image, AKA the area of the image, in pixels
-    area_in_pixels = 640 * 640
+    for row in range(size, 0, -1):
+        paletteList = []
+        for col in range(size):
+            x = minx + col * pixelSize
+            y = miny + row * pixelSize
 
-    # pack the canvas object into its parent widget
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()  # Does this even matter?
-    # At this scale, how much length and height of the
-    # imaginary plane does one pixel cover?
-    size = abs(max[0] - min[0]) / s
+            color = getColorFromPalette(complex(x, y), grad, window)
+            paletteList.append(color)
 
-    # pack the canvas object into its parent widget
-    tk_Interface_PhotoImage_canvas_pixel_object.pack()
+        pixels = '{' + ' '.join(paletteList) + '}'
+        tkPhotoImage.put(pixels, (0, size - row))
+        window.update()
+        print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)
 
-    # Keep track of the fraction of pixels that have been written up to this point in the program
-    fraction_of_pixels_writtenSoFar = int(s // 640)
-
-    # for r (where r means "row") in the range of the size of the square image,
-    # but count backwards (that's what the -1 as the 3rd parameter to the range() function means - it's the "step"
-    # You can actually put any number there that you want, because it defaults to "1" you usually don't have to
-    # but I have to here because we're actually going BACKWARDS, which took me
-    # a long time to figure out, so don't change it, or else the picture won't
-    # come out right
-    r = s
-    while r in range(s, 0, -1):
-        # for c (c == column) in the range of pixels in a square of size s
-        cs = []
-        for c in range(s):
-            # calculate the X value in the complex plane (I guess that's
-            # actually the REAL number part, but we call it X because
-            # GRAPHICS... whatev)
-            X = min[0] + c * size
-            Y = 0
-            # get the color of the pixel at this point in the complex plain
-            cp = getColorFromPalette(complex(X, Y), grad, win)
-            # calculate the X value in the complex plane (but I know this is
-            # really the IMAGINARY axis that we're talking about here...)
-            Y = min[1] + r * size
-            # TODO: do I really need to call getColorFromPalette() twice?
-            #       It seems like this should be slow...
-            #       But, if it aint broken, don't repair it, right?
-            cp = getColorFromPalette(complex(X, Y), grad, win)
-            cs.append(cp)
-        pixls = '{' + ' '.join(cs) + '}'
-        p.put(pixls, (0, s - r))
-        w.update()  # display a row of pixels
-        fraction_of_pixels_writtenSoFar = (s - r) / s # update the number of pixels output so far
-        # print a statusbar on the console
-        print(f"[{fraction_of_pixels_writtenSoFar:>4.0%}"
-                + f"{'=' * int(34 * fraction_of_pixels_writtenSoFar):<33}]",
-                end="\r"  # the end
-                , file=sys.stderr)
-        r -= 1

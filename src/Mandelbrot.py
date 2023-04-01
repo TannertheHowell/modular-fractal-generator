@@ -11,49 +11,49 @@ patternDict = {
     'mandelbrot': {
         'centerX': -0.6,
         'centerY': 0.0,
-        'axisLen': 2.5,
+        'axisLength': 2.5,
     },
 
     'mandelbrot-zoomed': {
         'centerX': -1.0,
         'centerY': 0.0,
-        'axisLen': 1.0,
+        'axisLength': 1.0,
     },
 
     'spiral0': {
         'centerX': -0.761335372924805,
         'centerY': 0.0835704803466797,
-        'axisLen': 0.004978179931102462,
+        'axisLength': 0.004978179931102462,
     },
 
     'spiral1': {
         'centerX': -0.747,
         'centerY': 0.1075,
-        'axisLen': 0.002,
+        'axisLength': 0.002,
     },
 
     'seahorse': {
         'centerX': -0.748,
         'centerY': -0.102,
-        'axisLen': 0.008,
+        'axisLength': 0.008,
     },
 
     'elephants': {
         'centerX': 0.3015,
         'centerY': -0.0200,
-        'axisLen': 0.03,
+        'axisLength': 0.03,
     },
 
     'leaf': {
         'centerX': -1.543577002,
         'centerY': -0.000058690069,
-        'axisLen': 0.000051248888,
+        'axisLength': 0.000051248888,
     },
 
     'starfish': {
         'centerX': -0.463595023481762,
         'centerY': 0.598380871135558,
-        'axisLen': 0.00128413675654471,
+        'axisLength': 0.00128413675654471,
     },
 }
 
@@ -68,7 +68,7 @@ def mbrot_main(fractalName):
 
     tkPhotoImage = PhotoImage(width=size, height=size)
     # TODO: REFORMAT
-    paint(patternDict, fractalName, window, tkPhotoImage)
+    paint(patternDict, fractalName, window, tkPhotoImage, size)
 
     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
     tkPhotoImage.write(f"{fractalName}.png")

@@ -47,7 +47,7 @@ def phoenix_main(fractalName):
 
     tkPhotoImage = PhotoImage(width=size, height=size)
     # TODO - should I have named this function "makeFractal()" or maybe just "makePicture"?
-    makePictureOfFractal(patternDict[fractalName], fractalName, ".png", window, grad, tkPhotoImage, GREY0, None, None, size)
+    makePictureOfFractal(patternDict[fractalName], window, grad, tkPhotoImage, GREY0, size)
 
     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
     tkPhotoImage.write(f"{fractalName}.png")
