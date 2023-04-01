@@ -30,7 +30,6 @@ GRAY37 = '#5e5e5e'  # gray 37 - lighter than black and gray 36
 GREY74 = '#bdbdbd'  # gray 74 - almost white
 GRAY99 = '#fcfcfc'  # gray 99 - almost white
 
-
 GRAPEFRUIT_PINK = '#E8283F'
 LEMON = '#FDFF00'
 LIME_GREEN = '#89FF00'
