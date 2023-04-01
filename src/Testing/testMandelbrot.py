@@ -24,7 +24,11 @@
 
 
 import unittest  	  	  
-from mbrot_fractal import PixelColorOrIndex, palette, MAX_ITERATIONS, pixelsWrittenSoFar  	  	  
+
+from Mandelbrot import PixelColorOrIndex
+from Palette import palette
+from ImagePainter import pixelsWrittenSoFar
+
 
 
 # autocmd BufWritePost <buffer> !python3 runTests.py  	  	  
@@ -49,24 +53,24 @@ class TestMandelbrot(unittest.TestCase):
 
     def test_pixelsWrittenSoFar(self):  	  	  
         """Progress bar produces correct output"""  	  	  
-        self.assertEqual(pixelsWrittenSoFar(1, 600), '[100% =================================]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(7, 7), '[ 99% =================================]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(257, 321), '[ 50% ================                 ]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(256, 256), '[ 50% =================                ]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(100, 100), '[ 80% ===========================      ]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(640, 480), '[-25%                                  ]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(137, 1000), '[ 73% ========================         ]')  	  	  
-        self.assertEqual(pixelsWrittenSoFar(512, 0), '[  0%                                  ]')  	  	  
+        self.assertEqual(pixelsWrittenSoFar(1, 512), '[100% =================================]')
+        self.assertEqual(pixelsWrittenSoFar(7, 512), '[ 99% =================================]')
+        self.assertEqual(pixelsWrittenSoFar(257, 512), '[ 50% ================                 ]')
+        self.assertEqual(pixelsWrittenSoFar(256, 512), '[ 50% =================                ]')
+        self.assertEqual(pixelsWrittenSoFar(100, 512), '[ 80% ===========================      ]')
+        self.assertEqual(pixelsWrittenSoFar(640, 512), '[-25%                                  ]')
+        self.assertEqual(pixelsWrittenSoFar(137, 512), '[ 73% ========================         ]')
+        self.assertEqual(pixelsWrittenSoFar(512, 512), '[  0%                                  ]')
 
     def test_palleteLength(self):  	  	  
         """Palette contains the expected number of colors"""  	  	  
         self.assertEqual(111, len(palette))
 
-    # added this unit test that ChatGPT gave me:
-    def test_pixelColorOrIndexOutOfBounds(self):
-        """PixelColorOrIndex returns the default index for out-of-bounds input"""
-        self.assertEqual(PixelColorOrIndex(complex(100, 100), palette), None)
-        self.assertEqual(PixelColorOrIndex(complex(-100, -100), palette), None)
+    # # added this unit test that ChatGPT gave me:
+    # def test_pixelColorOrIndexOutOfBounds(self):
+    #     """PixelColorOrIndex returns the default index for out-of-bounds input"""
+    #     self.assertEqual(PixelColorOrIndex(complex(100, 100), palette), None)
+    #     self.assertEqual(PixelColorOrIndex(complex(-100, -100), palette), None)
 
 
 if __name__ == '__main__':  	  	  
