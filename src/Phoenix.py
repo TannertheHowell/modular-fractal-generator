@@ -1,9 +1,10 @@
 import sys
 import time
 from tkinter import Tk, PhotoImage, mainloop
-from ImagePainter import makePictureOfFractal
-from Palette import grad, GREY0
+# from ImagePainter import makePictureOfFractal
+from Palette import grad
 from time import time
+from ImagePainter import paint
 
 patternDict = {
         # The full Phoenix set
@@ -46,8 +47,7 @@ def phoenix_main(fractalName):
     print("Rendering %s fractal" % fractalName, file=sys.stderr)
 
     tkPhotoImage = PhotoImage(width=size, height=size)
-    # TODO - should I have named this function "makeFractal()" or maybe just "makePicture"?
-    makePictureOfFractal(patternDict[fractalName], window, grad, tkPhotoImage, GREY0, size)
+    paint(fractalName, window, tkPhotoImage, size, grad)
 
     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
     tkPhotoImage.write(f"{fractalName}.png")

@@ -1,37 +1,39 @@
 import sys
 from tkinter import Tk, Canvas, PhotoImage, mainloop
-from Palette import palette
+from time import time
 
-# def imagePainterMain(fractalName):
-#     """The main entry-point for the Mandelbrot fractal generator"""
-#     size = 512
-#     startTime = time()
-#     window = Tk()
-#
-#     print("Rendering %s fractal" % fractalName, file=sys.stderr)
-#
-#     tkPhotoImage = PhotoImage(width=size, height=size)
-#     # TODO: REFORMAT
-#     paint(patternDict, fractalName, window, tkPhotoImage)
-#
-#     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
-#     tkPhotoImage.write(f"{fractalName}.png")
-#     print("Wrote picture " + fractalName + ".png", file=sys.stderr)
-#
-#     print("Close the image window to exit the program", file=sys.stderr)
-#     mainloop()
+from Palette import palette, grad
+import Mandelbrot
+import Phoenix
 
 
-def paint(patternDict, fractalName, window, tkPhotoImage, size):
+def imagePainterMain(fractalName, fractalInfo):
+    """The main entry-point for the fractal generator"""
+    size = 512
+    startTime = time()
+    window = Tk()
+
+    print("Rendering %s fractal" % fractalName, file=sys.stderr)
+
+    tkPhotoImage = PhotoImage(width=size, height=size)
+    paint(fractalName, fractalInfo, window, tkPhotoImage, size, grad)
+
+    print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
+    tkPhotoImage.write(f"{fractalName}.png")
+    print("Wrote picture " + fractalName + ".png", file=sys.stderr)
+
+    print("Close the image window to exit the program", file=sys.stderr)
+    mainloop()
+
+
+def paint(fractalName, fractalInfo, window, tkPhotoImage, size, grad):
     """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
     This code creates an image which is 640x640 pixels in size."""
 
-    fractal = patternDict[fractalName]
-
-    minx = fractal['centerX'] - (fractal['axisLength'] / 2.0)
-    maxx = fractal['centerX'] + (fractal['axisLength'] / 2.0)
-    miny = fractal['centerY'] - (fractal['axisLength'] / 2.0)
-    maxy = fractal['centerY'] + (fractal['axisLength'] / 2.0)
+    minx = fractalInfo['centerX'] - (fractalInfo['axisLength'] / 2.0)
+    maxx = fractalInfo['centerX'] + (fractalInfo['axisLength'] / 2.0)
+    miny = fractalInfo['centerY'] - (fractalInfo['axisLength'] / 2.0)
+    maxy = fractalInfo['centerY'] + (fractalInfo['axisLength'] / 2.0)
 
     # Display the image on the screen
     tk_canvas = Canvas(window, width=size, height=size, bg='#000000')
@@ -52,12 +54,15 @@ def paint(patternDict, fractalName, window, tkPhotoImage, size):
                 color = palette[idx]
             # The rest of the fractals
             else:
-                color = PixelColorOrIndex(complex(x, y), palette)
+                if fractalInfo["type"] == "phoenix":
+                    color = getColorFromPalette(complex(x, y), grad)
+                else:
+                    color = PixelColorOrIndex(complex(x, y), palette)
+
             paletteList.append(color)
 
         pixels = '{' + ' '.join(paletteList) + '}'
         tkPhotoImage.put(pixels, (0, size - row))
-        # portion = size - row / size
         window.update()  # display a row of pixels
 
         print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)  # the '\r' returns the cursor to the leftmost column
@@ -150,34 +155,34 @@ def getColorFromPalette(z, grad):
     return grad[101]         # Else this is a bounded sequence
 
 
-def makePictureOfFractal(fractal, window, grad, tkPhotoImage, backgroundColor, size):
-    """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
-    Assumes the image is 640x640 pixels."""
-
-    minx = fractal['centerX'] - (fractal['axisLength'] / 2.0)
-    maxx = fractal['centerX'] + (fractal['axisLength'] / 2.0)
-    miny = fractal['centerY'] - (fractal['axisLength'] / 2.0)
-    maxy = fractal['centerY'] + (fractal['axisLength'] / 2.0)
-
-    # Display the image on the screen
-    tk_canvas = Canvas(window, width=size, height=size, bg=backgroundColor)
-    tk_canvas.pack()
-
-    tk_canvas.create_image((size / 2, size / 2), image=tkPhotoImage, state="normal")
-
-    pixelSize = abs(maxx - minx) / size
-
-    for row in range(size, 0, -1):
-        paletteList = []
-        for col in range(size):
-            x = minx + col * pixelSize
-            y = miny + row * pixelSize
-
-            color = getColorFromPalette(complex(x, y), grad)
-            paletteList.append(color)
-
-        pixels = '{' + ' '.join(paletteList) + '}'
-        tkPhotoImage.put(pixels, (0, size - row))
-        window.update()
-        print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)
+# def makePictureOfFractal(fractal, window, grad, tkPhotoImage, backgroundColor, size):
+#     """Paint a Fractal image into the TKinter PhotoImage canvas.
+#     Assumes the image is 640x640 pixels."""
+#
+#     minx = fractal['centerX'] - (fractal['axisLength'] / 2.0)
+#     maxx = fractal['centerX'] + (fractal['axisLength'] / 2.0)
+#     miny = fractal['centerY'] - (fractal['axisLength'] / 2.0)
+#     maxy = fractal['centerY'] + (fractal['axisLength'] / 2.0)
+#
+#     # Display the image on the screen
+#     tk_canvas = Canvas(window, width=size, height=size, bg=backgroundColor)
+#     tk_canvas.pack()
+#
+#     tk_canvas.create_image((size / 2, size / 2), image=tkPhotoImage, state="normal")
+#
+#     pixelSize = abs(maxx - minx) / size
+#
+#     for row in range(size, 0, -1):
+#         paletteList = []
+#         for col in range(size):
+#             x = minx + col * pixelSize
+#             y = miny + row * pixelSize
+#
+#             color = getColorFromPalette(complex(x, y), grad)
+#             paletteList.append(color)
+#
+#         pixels = '{' + ' '.join(paletteList) + '}'
+#         tkPhotoImage.put(pixels, (0, size - row))
+#         window.update()
+#         print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)
 

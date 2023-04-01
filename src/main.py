@@ -22,33 +22,25 @@
 #       or product names of the Licensor, except as required for  	  	  
 #       reasonable and customary use of the source files.
 import sys
-from Phoenix import patternDict as phoenixFractals
-from Phoenix import phoenix_main
-from Mandelbrot import patternDict as mandelbrotFractals
-from Mandelbrot import mbrot_main
+
+from FractalInformation import patternDict
+from ImagePainter import imagePainterMain
 
 if __name__ == '__main__':
-    phoenixPatterns = []
-    for pattern in phoenixFractals.keys():
-        phoenixPatterns.append(pattern)
-
-    mandelbrotPatterns = []
-    for pattern in mandelbrotFractals.keys():
-        mandelbrotPatterns.append(pattern)
+    patternNames = []
+    for pattern in patternDict.keys():
+        patternNames.append(pattern)
 
     if len(sys.argv) < 2:
         print("Please provide the name of a fractal as an argument")
 
-        allPatterns = phoenixPatterns + mandelbrotPatterns
-        for pattern in allPatterns:
+        for pattern in patternNames:
             print("\t{}".format(pattern))
         sys.exit(1)
 
-    fractal = sys.argv[1]
-    if fractal in phoenixPatterns:
-        phoenix_main(fractal)
-    elif fractal in mandelbrotPatterns:
-        mbrot_main(fractal)
+    fractalName = sys.argv[1]
+    if fractalName in patternNames:
+        imagePainterMain(fractalName, patternDict[fractalName])
     else:
         print("Pattern type not recognized, try another pattern type")
         sys.exit(1)

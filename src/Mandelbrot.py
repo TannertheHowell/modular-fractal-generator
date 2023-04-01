@@ -3,6 +3,8 @@ import time
 from tkinter import Tk, Canvas, PhotoImage, mainloop
 from ImagePainter import paint
 from time import time
+from Palette import grad
+
 
 # For convenience, I have placed these into a dictionary, so you may easily
 # switch between them by entering the name of the image you want to generate
@@ -68,7 +70,7 @@ def mbrot_main(fractalName):
 
     tkPhotoImage = PhotoImage(width=size, height=size)
     # TODO: REFORMAT
-    paint(patternDict, fractalName, window, tkPhotoImage, size)
+    paint(fractalName, window, tkPhotoImage, size, grad)
 
     print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
     tkPhotoImage.write(f"{fractalName}.png")
