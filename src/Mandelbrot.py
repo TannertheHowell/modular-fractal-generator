@@ -2,25 +2,11 @@ import sys
 import time
 from tkinter import Tk, Canvas, PhotoImage, mainloop
 from ImagePainter import paint
-from math import sqrt, cos, cosh, sin, sinh, remainder, acos, acosh, asin, asinh
+from time import time
 
-# These are the imports that I usually import
-import turtle
-import os
-import os.path
-import sys
-import time
-import math
-
-# this import caused problems on my Windows computer...
-# import numpy
-
-# These are the different views of the Mandelbrot set you can make with this
-# program.
-#
-# For convenience I have placed these into a dictionary so you may easily
+# For convenience, I have placed these into a dictionary, so you may easily
 # switch between them by entering the name of the image you want to generate
-# into the variable 'image'.
+# into the variable 'patternDict'.
 patternDict = {
     'mandelbrot': {
         'centerX': -0.6,
@@ -52,12 +38,6 @@ patternDict = {
         'axisLen': 0.008,
     },
 
-    # 'spiral1': {
-    #     'centerX': -0.747,
-    #     'centerY': 0.1075,
-    #     'axisLen': 0.002,
-    # },
-
     'elephants': {
         'centerX': 0.3015,
         'centerY': -0.0200,
@@ -78,24 +58,23 @@ patternDict = {
 }
 
 
-def mbrot_main(image):
-    global img
-    # Set up the GUI so that we can paint the fractal image on the screen
-    print("Rendering {} fractal".format(image), file=sys.stderr)
-    before = time.time()
-    global window
+def mbrot_main(fractalName):
+    """The main entry-point for the Mandelbrot fractal generator"""
+    size = 512
+    startTime = time()
     window = Tk()
-    img = PhotoImage(width=512, height=512)
-    paint(patternDict, image, window, img)
 
-    # Save the image as a PNG
-    after = time.time()
-    print(f"\nDone in {after - before:.3f} seconds!", file=sys.stderr)
-    img.write(f"{image}.png")
-    print(f"Wrote picture {image}.png", file=sys.stderr)
+    print("Rendering %s fractal" % fractalName, file=sys.stderr)
 
-    # Call tkinter.mainloop so the GUI remains open
-    print("Close the image getColorFromPalettedow to exit the program", file=sys.stderr)
+    tkPhotoImage = PhotoImage(width=size, height=size)
+    # TODO: REFORMAT
+    paint(patternDict, fractalName, window, tkPhotoImage)
+
+    print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
+    tkPhotoImage.write(f"{fractalName}.png")
+    print("Wrote picture " + fractalName + ".png", file=sys.stderr)
+
+    print("Close the image window to exit the program", file=sys.stderr)
     mainloop()
 
 

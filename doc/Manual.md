@@ -36,7 +36,8 @@ with the name of the fractal you chose. Under that you will see a loading bar pr
       * To open the fractal on Linux.... If you're using Linus you better already know or how did you even get to this point?
   * In the case of the program having an error:
     * If you type in the command without a fractal name: You will get a list of the possible fractals which you can then 
-    use to try again with a new command
-    * If you mistype a fractal name, or try one that doesn't exist you will get an error of "ERROR: ______ is not a 
-    valid fractal". To fix this error, enter a valid (and correctly spelt) fractal name at the end of the command
+    use to try again with a new command as well as a message saying "Please provide the name of a fractal as an argument",
+    in this case, simply follow the error messages instructions to get passed the error. 
+    * If you mistype a fractal name, or try one that doesn't exist you will get an error of "Pattern type not recognized,
+    try another pattern type". To fix this error, enter a valid (and correctly spelt) fractal name at the end of the command
 
