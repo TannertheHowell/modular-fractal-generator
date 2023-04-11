@@ -20,19 +20,27 @@
 #       notices from the Source form of the Work; and  	  	  
 #   (d) You do not misuse the trade names, trademarks, service marks,  	  	  
 #       or product names of the Licensor, except as required for  	  	  
-#       reasonable and customary use of the source files.  	  	  
+#       reasonable and customary use of the source files.
+import sys
 
+from FractalInformation import patternDict
+from ImagePainter import imagePainterMain
 
-import unittest  	  	  
+if __name__ == '__main__':
+    patternNames = []
+    for pattern in patternDict.keys():
+        patternNames.append(pattern)
 
-from Testing import testMandelbrot, testPhoenix  	  	  
-from Testing import testAssertions  # TODO: delete from the final submission  	  	  
+    if len(sys.argv) < 2:
+        print("Please provide the name of a fractal as an argument")
 
+        for pattern in patternNames:
+            print("\t{}".format(pattern))
+        sys.exit(1)
 
-suite = unittest.TestSuite()  	  	  
-tests = [testMandelbrot.TestMandelbrot, testPhoenix.TestPhoenix]  	  	  
-tests.append(testAssertions.TestAssertions)  # TODO: delete from the final submission  	  	  
-
-for test in tests:  	  	  
-    suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(test))  	  	  
-unittest.TextTestRunner(verbosity=2).run(suite)  	  	  
+    fractalName = sys.argv[1]
+    if fractalName in patternNames:
+        imagePainterMain(fractalName, patternDict[fractalName])
+    else:
+        print("Pattern type not recognized, try another pattern type")
+        sys.exit(1)

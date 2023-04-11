@@ -1,77 +1,74 @@
-import sys
+import sys  	  	  
+import time  	  	  
+
 from tkinter import Tk, Canvas, PhotoImage, mainloop
-from time import time
-
-from Palette import palette, grad
-from Mandelbrot import PixelColorOrIndex
-from Phoenix import getColorFromPalette
+import Mandelbrot
+import Phoenix
+from Palette import MBROT, PHENX, BLACK
 
 
-def imagePainterMain(fractalName, fractalInfo):
-    """The main entry-point for the fractal generator"""
-    size = 512
-    startTime = time()
+SIZE = 512
+
+def paint(fractal, imagename):
+    """Paint a Fractal image into the TKinter PhotoImage canvas.
+    This code creates an image which is 640x640 pixels in size."""
+
+    # Set up the GUI so that we can paint the fractal image on the screen
+    print("Rendering {} fractal".format(imagename), file=sys.stderr)
+    before = time.time()
+
+    # Figure out how the boundaries of the PhotoImage relate to coordinates on
+    # the imaginary plane.
+    minx = fractal['centerX'] - (fractal['axisLen'] / 2.0)
+    maxx = fractal['centerX'] + (fractal['axisLen'] / 2.0)
+    miny = fractal['centerY'] - (fractal['axisLen'] / 2.0)
+    maxy = fractal['centerY'] + (fractal['axisLen'] / 2.0)
+
+    # Display the image on the screen
     window = Tk()
+    canvas = Canvas(window, width=SIZE, height=SIZE, bg=BLACK)
+    canvas.pack()
+    img = PhotoImage(width=SIZE, height=SIZE)
+    canvas.create_image((SIZE/2, SIZE/2), image=img, state="normal")
 
-    print("Rendering %s fractal" % fractalName, file=sys.stderr)
+    # At this scale, how much length and height on the imaginary plane does one
+    # pixel take?
+    pixelsize = abs(maxx - minx) / SIZE
 
-    tkPhotoImage = PhotoImage(width=size, height=size)
-    paint(fractalName, fractalInfo, window, tkPhotoImage, size, grad)
+    for row in range(SIZE, 0, -1):
+        cc = []
+        for col in range(SIZE):
+            x = minx + col * pixelsize
+            y = miny + row * pixelsize
+            if fractal['type'] == 'mandelbrot':
+                idx = Mandelbrot.count_iterations(complex(x, y), len(MBROT))
+                color = MBROT[idx]
+            else:
+                idx = Phoenix.count_iterations(complex(x, y), len(PHENX))
+                color = PHENX[idx]
+            cc.append(color)
 
-    print(f"\nDone in {time() - startTime:.3f} seconds!", file=sys.stderr)
-    tkPhotoImage.write(f"{fractalName}.png")
-    print("Wrote picture " + fractalName + ".png", file=sys.stderr)
+        img.put('{' + ' '.join(cc) + '}', to=(0, SIZE-row))
+        window.update()  # display a row of pixels
+        progress(row)
 
+    # Save the image as a PNG
+    after = time.time()
+    print(f"\nDone in {after - before:.3f} seconds!", file=sys.stderr)
+    img.write(f"{imagename}.png")
+    print(f"Wrote picture {imagename}.png", file=sys.stderr)
+
+    # Call tkinter.mainloop so the GUI remains open
     print("Close the image window to exit the program", file=sys.stderr)
     mainloop()
 
 
-def paint(fractalName, fractalInfo, window, tkPhotoImage, size, grad):
-    """Paint a Fractal image into the TKinter PhotoImage canvas.  	  	  
-    This code creates an image which is 640x640 pixels in size."""
-
-    minx = fractalInfo['centerX'] - (fractalInfo['axisLength'] / 2.0)
-    maxx = fractalInfo['centerX'] + (fractalInfo['axisLength'] / 2.0)
-    miny = fractalInfo['centerY'] - (fractalInfo['axisLength'] / 2.0)
-    maxy = fractalInfo['centerY'] + (fractalInfo['axisLength'] / 2.0)
-
-    # Display the image on the screen
-    tk_canvas = Canvas(window, width=size, height=size, bg='#000000')
-    tk_canvas.pack()
-    tk_canvas.create_image((size / 2, size / 2), image=tkPhotoImage, state="normal")
-
-    pixelSize = abs(maxx - minx) / size
-
-    for row in range(size, 0, -1):
-        paletteList = []
-        for col in range(size):
-            x = minx + col * pixelSize
-            y = miny + row * pixelSize
-            # "Leaf" is the only well-behaved fractal - all of the others crash
-            #
-            if fractalName in ['leaf', ]:
-                idx = PixelColorOrIndex(complex(x, y), None)
-                color = palette[idx]
-            # The rest of the fractals
-            else:
-                if fractalInfo["type"] == "phoenix":
-                    color = getColorFromPalette(complex(x, y), grad)
-                else:
-                    color = PixelColorOrIndex(complex(x, y), palette)
-
-            paletteList.append(color)
-
-        pixels = '{' + ' '.join(paletteList) + '}'
-        tkPhotoImage.put(pixels, (0, size - row))
-        window.update()  # display a row of pixels
-
-        print(pixelsWrittenSoFar(row, size), end='\r', file=sys.stderr)  # the '\r' returns the cursor to the leftmost column
-
-
-def pixelsWrittenSoFar(rows, size):
-    portion = (size - rows) / size
+def progress(rows):
+    portion = (SIZE - rows) / SIZE
     status_percent = '{:>4.0%}'.format(portion)
     status_bar_width = 34
     status_bar = '=' * int(status_bar_width * portion)
     status_bar = '{:<33}'.format(status_bar)
-    return ''.join(list(['[', status_percent, ' ', status_bar, ']']))
+    print(''.join(list(['[', status_percent, ' ', status_bar, ']'])),
+          end='\r',  # the '\r' returns the cursor to the leftmost column
+          file=sys.stderr)
