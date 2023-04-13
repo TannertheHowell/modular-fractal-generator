@@ -6,14 +6,56 @@ class FractalParser:
         pass
 
     def get_frac_dic(self, file_name):
-        # this function will grab the .frac file
-        file = open(file_name)
-        white_list = ['type', 'centerx', 'centery', 'axislength', 'pixels', 'iterations', 'creal', 'cimag']
-        required_list = ['type', 'min', 'max', 'axislength', 'pixelsize', 'iterations']
-        fractal_white_list = ['phoenix', 'mandelbrot', 'julia', 'spider']
+
+        param_info = {
+            'type': {
+                'required_by': ['all'],
+                'object_type': str
+            },
+            'centerx': {
+                'required_by': ['all'],
+                'object_type': float
+            },
+            'centery': {
+                'required_by': ['all'],
+                'object_type': float
+            },
+            'axislength': {
+                'required_by': ['all'],
+                'object_type': float
+            },
+            'pixels': {
+                'required_by': ['all'],
+                'object_type': int
+            },
+            'iterations': {
+                'required_by': ['all'],
+                'object_type': int
+            },
+            'creal': {
+                'required_by': ['julia', 'phoenix'],
+                'object_type': float
+            },
+            'cimag': {
+                'required_by': ['julia', 'phoenix'],
+                'object_type': float
+            },
+            'preal': {
+                'required_by': ['phoenix'],
+                'object_type': float
+            },
+            'pimag': {
+                'required_by': ['phoenix'],
+                'object_type': float
+            }
+        }
+
+        fractal_white_list = ['phoenix', 'mandelbrot', 'julia', 'mandlebrot3']
         raw_dict = {}
 
         try:
+            file = open(file_name)
+
             for line in file:
                 line = line.strip().lower()
                 # No more lines, continue on
@@ -24,15 +66,17 @@ class FractalParser:
                 if line.startswith('#'):
                     continue
 
-                key, value = line.split(":", 1)
-                key = key.strip()
-                value = value.strip()
+                split_line = line.split(":")
 
-                if key in white_list:
-                    if key in ['centerx', 'centery', 'axislength', 'creal', 'cimag']:
-                        value = safe_convert(value, float)
-                    elif key in ['pixels', 'iterations']:
-                        value = safe_convert(value, int)
+                if len(split_line) != 2:
+                    raise RuntimeError("Line does not contain a correct format for a key value pair")
+
+                key = split_line[0].strip()
+                value = split_line[1].strip()
+
+                if key in param_info.keys():
+                    if key != 'type':
+                        value = safe_convert(value, param_info[key]['object_type'])
 
                     if value is None:
                         raise RuntimeError("Invalid key value of: " + key + " was given")
@@ -44,6 +88,14 @@ class FractalParser:
 
         except FileNotFoundError:
             raise FileNotFoundError("File not found")
+
+        for param_name, param_specs in param_info.items():
+            if 'all' in param_specs['required_by']:
+                if param_name not in raw_dict:
+                    raise RuntimeError("Missing required parameter " + param_name + " in the fractal configuration file")
+            elif raw_dict['type'] in param_specs['required_by']:
+                if param_name not in raw_dict:
+                    raise RuntimeError("Missing required parameter " + param_name + " in the fractal configuration file because it is a " + raw_dict['type'] + " type")
 
         final_dict = {}
         final_dict['min'] = {}
@@ -66,11 +118,6 @@ class FractalParser:
         imagename = p.stem + ".png"
         final_dict['imagename'] = imagename
 
-        # TODO: CHECK TO MAKE SURE ALL REQUIRED PARAMETERS ARE IN THE DICTIONARY
-        for required_key in required_list:
-            if required_key not in final_dict:
-                raise RuntimeError("Missing required parameter " + required_key + " in the fractal configuration file")
-
         return final_dict
 
 
@@ -90,6 +137,7 @@ def safe_convert(obj, new_type):
     except ValueError:
         return None
 
+
 my_fractal_parser = FractalParser()
 
 coral = my_fractal_parser.get_frac_dic('../data/coral.frac')
@@ -104,5 +152,8 @@ print(minibrot)
 mandelbrot = my_fractal_parser.get_frac_dic('../data/mandelbrot.frac')
 print(mandelbrot)
 
-# invalid = my_fractal_parser.get_frac_dic('../data/invalid.frac')
-# print(invalid)
+phoenix = my_fractal_parser.get_frac_dic('../data/phoenix.frac')
+print(phoenix)
+
+invalid = my_fractal_parser.get_frac_dic('../data/invalid.frac')
+print(invalid)
