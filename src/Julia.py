@@ -2,9 +2,9 @@ from Fractal import Fractal
 
 
 class Julia(Fractal):
-    def __init__(self, max_iterations=100, c=-0.70176 - 0.3842j):
+    def __init__(self, max_iterations=100, creal=-1.0125, cimag=0.275):
         super().__init__(max_iterations)
-        self.c = c
+        self.c = complex(creal, cimag)
 
     def count(self, complex_number):
         z = complex_number

@@ -1,25 +1,23 @@
 from Phoenix import Phoenix
 from Julia import Julia
 from Mandelbrot import Mandelbrot
-from OrientalDragons import OrientalDragons
+from Mandelbrot3 import Mandelbrot3
 
 
-def make_fractal(fractal):
-    fractal_type = fractal.get('type')
-    max_iterations = fractal.get('iterations')
+def make_fractal(fractal_info):
+    fractal_type = fractal_info.get('type')
+    max_iterations = fractal_info.get('iterations')
 
-    if fractal_type == 'OrientalDragons':
-        # TODO this feels redundant with the c,
-        # how can I set it ip like mbrot and phoenix to just use c inside of count?
-        c = fractal.get('c', -0.8 + 0.156j)
-        return OrientalDragons(max_iterations, c)
-    elif fractal_type == 'Mandelbrot':
+    if fractal_type == 'mandelbrot':
         return Mandelbrot(max_iterations)
-    elif fractal_type == 'Phoenix':
+    elif fractal_type == 'phoenix':
         return Phoenix(max_iterations)
-    elif fractal_type == 'Julia':
-        c = fractal.get('c', -0.8 + 0.156j)
-        return Julia(max_iterations, c)
+    elif fractal_type == 'mandelbrot3':
+        return Mandelbrot3(max_iterations)
+    elif fractal_type == 'julia':
+        creal = fractal_info.get('creal')
+        cimag = fractal_info.get('cimag')
+        return Julia(max_iterations, creal, cimag)
     else:
-        # TODO do a default fractal hard coded in
-        return
+        # TODO do a default fractal hard coded in, does this work?
+        return Julia(78, -1.1301, 0.262)

@@ -33,7 +33,6 @@ with the name of the fractal you chose. Under that you will see a loading bar pr
     like _____.png, with the correct fractal name. 
       * To open the fractal on Windows enter 'start _____.png' into the shell
       * To open the fractal on Mac enter 'open _____.png' into the shell
-      * To open the fractal on Linux.... If you're using Linus you better already know or how did you even get to this point?
   * In the case of the program having an error:
     * If you type in the command without a fractal name: You will get a list of the possible fractals which you can then 
     use to try again with a new command as well as a message saying "Please provide the name of a fractal as an argument",

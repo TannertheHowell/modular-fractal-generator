@@ -20,4 +20,4 @@ class Phoenix(Fractal):
             zPrev = zSave
             if abs(z) > 2.0:
                 return i
-        return self.max_iterations - 1  # DO I NEED THE -1 HERE?
+        return self.max_iterations - 1

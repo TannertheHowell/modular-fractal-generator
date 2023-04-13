@@ -9,6 +9,7 @@ class FractalParser:
         # this function will grab the .frac file
         file = open(file_name)
         white_list = ['type', 'centerx', 'centery', 'axislength', 'pixels', 'iterations', 'creal', 'cimag']
+        required_list = ['type', 'min', 'max', 'axislength', 'pixelsize', 'iterations']
         fractal_white_list = ['phoenix', 'mandelbrot', 'julia', 'spider']
         raw_dict = {}
 
@@ -34,10 +35,10 @@ class FractalParser:
                         value = safe_convert(value, int)
 
                     if value is None:
-                        raise RuntimeError("Invalid key value of: " + key)
+                        raise RuntimeError("Invalid key value of: " + key + " was given")
 
                     if key == 'type' and value not in fractal_white_list:
-                        raise NotImplementedError("There is an invalid fractal type")
+                        raise NotImplementedError("An invalid fractal type was entered")
 
                     raw_dict[key] = value
 
@@ -64,6 +65,11 @@ class FractalParser:
         p = Path(file_name)
         imagename = p.stem + ".png"
         final_dict['imagename'] = imagename
+
+        # TODO: CHECK TO MAKE SURE ALL REQUIRED PARAMETERS ARE IN THE DICTIONARY
+        for required_key in required_list:
+            if required_key not in final_dict:
+                raise RuntimeError("Missing required parameter " + required_key + " in the fractal configuration file")
 
         return final_dict
 
