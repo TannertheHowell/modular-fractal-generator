@@ -6,7 +6,7 @@ from OrientalDragons import OrientalDragons
 
 def make_fractal(fractal):
     fractal_type = fractal.get('type')
-    max_iterations = fractal.get('max_iterations')
+    max_iterations = fractal.get('iterations')
 
     if fractal_type == 'OrientalDragons':
         # TODO this feels redundant with the c,
