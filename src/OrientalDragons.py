@@ -2,6 +2,7 @@ from Fractal import Fractal
 import math
 
 
+# TODO: Change this to a spider class instead
 # Found the c value and z equation on a forum :link
 class OrientalDragons(Fractal):
     def __init__(self, max_iterations=100, c=0.28 + 0.008j):
