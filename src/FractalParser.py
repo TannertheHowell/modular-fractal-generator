@@ -134,23 +134,3 @@ def safe_convert(obj, new_type):
     except ValueError:
         return None
 
-
-# my_fractal_parser = FractalParser()
-#
-# coral = my_fractal_parser.get_frac_dic('../data/coral.frac')
-# print(coral)
-#
-# fjords = my_fractal_parser.get_frac_dic('../data/fjords.frac')
-# print(fjords)
-#
-# minibrot = my_fractal_parser.get_frac_dic('../data/minibrot.frac')
-# print(minibrot)
-#
-# mandelbrot = my_fractal_parser.get_frac_dic('../data/mandelbrot.frac')
-# print(mandelbrot)
-#
-# phoenix = my_fractal_parser.get_frac_dic('../data/phoenix.frac')
-# print(phoenix)
-#
-# invalid = my_fractal_parser.get_frac_dic('../data/invalid.frac')
-# print(invalid)

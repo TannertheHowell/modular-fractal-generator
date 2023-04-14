@@ -68,16 +68,3 @@ myImagePainter = ImagePainter(fractal_object, color_palette, fractal_info)
 
 myImagePainter.paint()
 
-# if len(sys.argv) < 2:
-#     print ("{}".format( 'Please provide the name of a fractal as an argument' ))
-#     for f in FRACTALS:
-#         print(f"  {f}")
-#     sys.exit(1)
-# elif sys.argv[1] not in FRACTALS:
-#     print("ERROR:", sys.argv[1], "is not a valid fractal")
-#     print("Please choose one of the following:")
-#     for f in FRACTALS:
-#         print(f"  {f}")
-#     sys.exit(1)
-#
-# paint(FRACTALS[sys.argv[1]], sys.argv[1])
