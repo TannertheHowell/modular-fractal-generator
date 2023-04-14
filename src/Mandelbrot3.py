@@ -2,7 +2,7 @@ from Fractal import Fractal
 
 
 class Mandelbrot3(Fractal):
-    def __init__(self, max_iterations=100):
+    def __init__(self, max_iterations):
         super().__init__(max_iterations)
 
     def count(self, complex_number):

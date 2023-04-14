@@ -11,7 +11,11 @@ def make_fractal(fractal_info):
     if fractal_type == 'mandelbrot':
         return Mandelbrot(max_iterations)
     elif fractal_type == 'phoenix':
-        return Phoenix(max_iterations)
+        creal = fractal_info.get('creal')
+        cimag = fractal_info.get('cimag')
+        preal = fractal_info.get('preal')
+        pimag = fractal_info.get('pimag')
+        return Phoenix(max_iterations, creal, cimag, preal, pimag)
     elif fractal_type == 'mandelbrot3':
         return Mandelbrot3(max_iterations)
     elif fractal_type == 'julia':
@@ -19,5 +23,5 @@ def make_fractal(fractal_info):
         cimag = fractal_info.get('cimag')
         return Julia(max_iterations, creal, cimag)
     else:
-        # TODO do a default fractal hard coded in, does this work?
+        # Otherwise return this julia fractal as a default
         return Julia(78, -1.1301, 0.262)

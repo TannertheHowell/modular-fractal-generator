@@ -2,7 +2,7 @@ from Fractal import Fractal
 
 
 class Julia(Fractal):
-    def __init__(self, max_iterations=100, creal=-1.0125, cimag=0.275):
+    def __init__(self, max_iterations, creal, cimag):
         super().__init__(max_iterations)
         self.c = complex(creal, cimag)
 

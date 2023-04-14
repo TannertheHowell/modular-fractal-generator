@@ -24,20 +24,60 @@
 
 
 import sys
-from FractalInformation import FRACTALS
-from ImagePainter import paint
+from ImagePainter import ImagePainter
+import FractalParser
+import FractalFactory
+import PaletteFactory
 
+param_count = len(sys.argv)
 
-if len(sys.argv) < 2:
-    print ("{}".format( 'Please provide the name of a fractal as an argument' ))
-    for f in FRACTALS:
-        print(f"  {f}")
-    sys.exit(1)
-elif sys.argv[1] not in FRACTALS:
-    print("ERROR:", sys.argv[1], "is not a valid fractal")
-    print("Please choose one of the following:")
-    for f in FRACTALS:
-        print(f"  {f}")
-    sys.exit(1)
+if param_count == 1:
+    # Do the default fractal
+    fractal_info = {
+        'type': 'mandelbrot',
+        'pixels': 640,
+        'axislength': 4.0,
+        'iterations': 100,
+        'min': {
+            'x': -2.0,
+            'y': -2.0
+        },
+        'max': {
+            'x': 2.0,
+            'y': 2.0
+        },
+        'pixelsize': 0.00625,
+        'imagename': 'mandelbrot.png'
+    }
+    fractal_object = FractalFactory.make_fractal(fractal_info)
+    color_palette = PaletteFactory.makePalette("", fractal_info.get('pixels'))
+elif param_count == 2:
+    # Make the fractal specified, use default color palette
+    fractal_info = FractalParser.get_frac_dic(sys.argv[1])
+    fractal_object = FractalFactory.make_fractal(fractal_info)
+    color_palette = PaletteFactory.makePalette("", fractal_info.get('pixels'))
+elif param_count > 2:
+    # Make the fractal specified, use the specified color palette
+    fractal_info = FractalParser.get_frac_dic(sys.argv[1])
+    fractal_object = FractalFactory.make_fractal(fractal_info)
+    color_palette = PaletteFactory.makePalette(sys.argv[2], fractal_info.get('pixels'))
+else:
+    raise RuntimeError("Bad amount of parameters")
 
-paint(FRACTALS[sys.argv[1]], sys.argv[1])
+myImagePainter = ImagePainter(fractal_object, color_palette, fractal_info)
+
+myImagePainter.paint()
+
+# if len(sys.argv) < 2:
+#     print ("{}".format( 'Please provide the name of a fractal as an argument' ))
+#     for f in FRACTALS:
+#         print(f"  {f}")
+#     sys.exit(1)
+# elif sys.argv[1] not in FRACTALS:
+#     print("ERROR:", sys.argv[1], "is not a valid fractal")
+#     print("Please choose one of the following:")
+#     for f in FRACTALS:
+#         print(f"  {f}")
+#     sys.exit(1)
+#
+# paint(FRACTALS[sys.argv[1]], sys.argv[1])

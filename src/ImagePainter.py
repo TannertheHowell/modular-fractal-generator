@@ -1,74 +1,73 @@
 import sys  	  	  
-import time  	  	  
-
+import time
 from tkinter import Tk, Canvas, PhotoImage, mainloop
-import Mandelbrot
-import Phoenix
-from Palette import MBROT, PHENX, BLACK
 
 
-SIZE = 512
+class ImagePainter:
 
-def paint(fractal, imagename):
-    """Paint a Fractal image into the TKinter PhotoImage canvas.
-    This code creates an image which is 640x640 pixels in size."""
+    def __init__(self, fractal_object, color_palette, fractal_info):
+        self.fractal_object = fractal_object
+        self.color_palette = color_palette
+        self.fractal_info = fractal_info
+        self.SIZE = 512
 
-    # Set up the GUI so that we can paint the fractal image on the screen
-    print("Rendering {} fractal".format(imagename), file=sys.stderr)
-    before = time.time()
+    def paint(self):
+        """Paint a Fractal image into the TKinter PhotoImage canvas.
+        This code creates an image which is 640x640 pixels in size."""
 
-    # Figure out how the boundaries of the PhotoImage relate to coordinates on
-    # the imaginary plane.
-    minx = fractal['centerX'] - (fractal['axisLen'] / 2.0)
-    maxx = fractal['centerX'] + (fractal['axisLen'] / 2.0)
-    miny = fractal['centerY'] - (fractal['axisLen'] / 2.0)
-    maxy = fractal['centerY'] + (fractal['axisLen'] / 2.0)
+        image_name = self.fractal_info.get('imagename')
 
-    # Display the image on the screen
-    window = Tk()
-    canvas = Canvas(window, width=SIZE, height=SIZE, bg=BLACK)
-    canvas.pack()
-    img = PhotoImage(width=SIZE, height=SIZE)
-    canvas.create_image((SIZE/2, SIZE/2), image=img, state="normal")
+        # Set up the GUI so that we can paint the fractal image on the screen
+        print("Rendering {} fractal".format(image_name), file=sys.stderr)
+        before = time.time()
 
-    # At this scale, how much length and height on the imaginary plane does one
-    # pixel take?
-    pixelsize = abs(maxx - minx) / SIZE
+        # Figure out how the boundaries of the PhotoImage relate to coordinates on
+        # the imaginary plane.
+        minx = self.fractal_info.get('min').get('x')
+        maxx = self.fractal_info.get('max').get('x')
+        miny = self.fractal_info.get('min').get('y')
+        maxy = self.fractal_info.get('max').get('y')
 
-    for row in range(SIZE, 0, -1):
-        cc = []
-        for col in range(SIZE):
-            x = minx + col * pixelsize
-            y = miny + row * pixelsize
-            if fractal['type'] == 'mandelbrot':
-                idx = Mandelbrot.count_iterations(complex(x, y), len(MBROT))
-                color = MBROT[idx]
-            else:
-                idx = Phoenix.count_iterations(complex(x, y), len(PHENX))
-                color = PHENX[idx]
-            cc.append(color)
+        # Display the image on the screen
+        window = Tk()
+        canvas = Canvas(window, width=self.SIZE, height=self.SIZE, bg='#FDE6FA')
+        canvas.pack()
+        img = PhotoImage(width=self.SIZE, height=self.SIZE)
+        canvas.create_image((self.SIZE/2, self.SIZE/2), image=img, state="normal")
 
-        img.put('{' + ' '.join(cc) + '}', to=(0, SIZE-row))
-        window.update()  # display a row of pixels
-        progress(row)
+        # At this scale, how much length and height on the imaginary plane does one
+        # pixel take?
+        pixelsize = self.fractal_info.get('pixelsize')
 
-    # Save the image as a PNG
-    after = time.time()
-    print(f"\nDone in {after - before:.3f} seconds!", file=sys.stderr)
-    img.write(f"{imagename}.png")
-    print(f"Wrote picture {imagename}.png", file=sys.stderr)
+        for row in range(self.SIZE, 0, -1):
+            cc = []
+            for col in range(self.SIZE):
+                x = minx + col * pixelsize
+                y = miny + row * pixelsize
+                idx = self.fractal_object.count(complex(x, y))
+                color = self.color_palette.getColor(idx)
+                cc.append(color)
 
-    # Call tkinter.mainloop so the GUI remains open
-    print("Close the image window to exit the program", file=sys.stderr)
-    mainloop()
+            img.put('{' + ' '.join(cc) + '}', to=(0, self.SIZE-row))
+            window.update()  # display a row of pixels
+            self.progress(row)
 
+        # Save the image as a PNG
+        after = time.time()
+        print(f"\nDone in {after - before:.3f} seconds!", file=sys.stderr)
+        img.write(f"{image_name}.png")
+        print(f"Wrote picture {image_name}.png", file=sys.stderr)
 
-def progress(rows):
-    portion = (SIZE - rows) / SIZE
-    status_percent = '{:>4.0%}'.format(portion)
-    status_bar_width = 34
-    status_bar = '=' * int(status_bar_width * portion)
-    status_bar = '{:<33}'.format(status_bar)
-    print(''.join(list(['[', status_percent, ' ', status_bar, ']'])),
-          end='\r',  # the '\r' returns the cursor to the leftmost column
-          file=sys.stderr)
+        # Call tkinter.mainloop so the GUI remains open
+        print("Close the image window to exit the program", file=sys.stderr)
+        mainloop()
+
+    def progress(self, rows):
+        portion = (self.SIZE - rows) / self.SIZE
+        status_percent = '{:>4.0%}'.format(portion)
+        status_bar_width = 34
+        status_bar = '=' * int(status_bar_width * portion)
+        status_bar = '{:<33}'.format(status_bar)
+        print(''.join(list(['[', status_percent, ' ', status_bar, ']'])),
+              end='\r',  # the '\r' returns the cursor to the leftmost column
+              file=sys.stderr)
