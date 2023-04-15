@@ -14,4 +14,5 @@
 
 | Date        | Time Spent | Events
 | April 11    | 1.5 hour   | Initial set up, reading documentation, first quiz attempt and Phase 0 completion
-| TOTAL       | 1.5 hours    | *Your TOTAL should agree with your daily entries*
+| April 13    | 7   hour   | Doing way too much on one day, hoping come tomorrow that it still works and I can understand it.
+| TOTAL       | 8.5 hours    | *Your TOTAL should agree with your daily entries*

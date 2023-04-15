@@ -9,7 +9,7 @@ class ImagePainter:
         self.fractal_object = fractal_object
         self.color_palette = color_palette
         self.fractal_info = fractal_info
-        self.SIZE = 512
+        self.SIZE = self.fractal_info.get("pixels")
 
     def paint(self):
         """Paint a Fractal image into the TKinter PhotoImage canvas.

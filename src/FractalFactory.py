@@ -22,6 +22,3 @@ def make_fractal(fractal_info):
         creal = fractal_info.get('creal')
         cimag = fractal_info.get('cimag')
         return Julia(max_iterations, creal, cimag)
-    else:
-        # Otherwise return this julia fractal as a default
-        return Julia(78, -1.1301, 0.262)

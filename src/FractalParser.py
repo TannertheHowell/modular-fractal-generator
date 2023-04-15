@@ -99,11 +99,11 @@ def get_frac_dic(file_name):
 
     for key, value in raw_dict.items():
         if key == 'centerx':
-            final_dict['min']['x'] = value - .5 * raw_dict['axislength']
-            final_dict['max']['x'] = value + .5 * raw_dict['axislength']
+            final_dict['min']['x'] = value - 0.5 * raw_dict['axislength']
+            final_dict['max']['x'] = value + 0.5 * raw_dict['axislength']
         elif key == 'centery':
-            final_dict['min']['y'] = value - .5 * raw_dict['axislength']
-            final_dict['max']['y'] = value + .5 * raw_dict['axislength']
+            final_dict['min']['y'] = value - 0.5 * raw_dict['axislength']
+            final_dict['max']['y'] = value + 0.5 * raw_dict['axislength']
         elif key == 'pixels':
             final_dict[key] = value
             final_dict['pixelsize'] = raw_dict['axislength'] / value

@@ -7,7 +7,7 @@ preal: -0.486
 pimag: 0.0
 # c value taken from http://usefuljs.net/fractals/docs/julia_mandelbrot.html, "Connected and Unconnected Sets"
 pixels: 1024
-iterations: 128
+iterations: 512
 # minReal:-0.617796912486643 maxReal:-0.604787231608973
 # minImag:-0.0477138917249203 maxImag:-0.0379566310666682
 centerX: -0.611292072047808
