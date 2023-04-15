@@ -25,11 +25,11 @@
 
 import unittest  	  	  
 
-from Testing import testMandelbrot, testPhoenix
+from Testing import testing
 
 
 suite = unittest.TestSuite()  	  	  
-tests = [testMandelbrot.TestMandelbrot, testPhoenix.TestPhoenix]
+tests = [testing]
 
 for test in tests:  	  	  
     suite.addTest(unittest.defaultTestLoader.loadTestsFromTestCase(test))  	  	  

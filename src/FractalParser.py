@@ -46,7 +46,7 @@ def get_frac_dic(file_name):
         }
     }
 
-    fractal_white_list = ['phoenix', 'mandelbrot', 'julia', 'mandlebrot3']
+    fractal_white_list = ['phoenix', 'mandelbrot', 'julia', 'mandelbrot3']
     raw_dict = {}
 
     try:
